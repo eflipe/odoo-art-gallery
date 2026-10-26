@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_art_gallery_root"
+              name="Art Gallery"
+              sequence="10"/>
+
+    <menuitem id="menu_artwork"
+              name="Artworks"
+              parent="menu_art_gallery_root"
+              action="action_artwork"
+              sequence="1"/>
+</odoo>

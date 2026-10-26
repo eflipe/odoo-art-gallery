@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- List view -->
+    <record id="view_artwork_tree" model="ir.ui.view">
+        <field name="name">art_gallery.artwork.tree</field>
+        <field name="model">art_gallery.artwork</field>
+        <field name="arch" type="xml">
+            <list string="Artworks">
+                <field name="name"/>
+                <field name="artist_name"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form view -->
+    <record id="view_artwork_form" model="ir.ui.view">
+        <field name="name">art_gallery.artwork.form</field>
+        <field name="model">art_gallery.artwork</field>
+        <field name="arch" type="xml">
+            <form string="Artwork">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="artist_name"/>
+                    </group>
+                    <group>
+                        <field name="description"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Search view -->
+    <record id="view_artwork_search" model="ir.ui.view">
+        <field name="name">art_gallery.artwork.search</field>
+        <field name="model">art_gallery.artwork</field>
+        <field name="arch" type="xml">
+            <search string="Search Artworks">
+                <field name="name"/>
+                <field name="artist_name"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_artwork" model="ir.actions.act_window">
+        <field name="name">Artworks</field>
+        <field name="res_model">art_gallery.artwork</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>
