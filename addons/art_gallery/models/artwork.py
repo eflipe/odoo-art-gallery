@@ -25,19 +25,21 @@ class Artwork(models.Model):
         'This artwork has already been imported.',
     )
 
-    def action_import_artworks(self):
-        """Cada clic obtiene 10 obras nuevas, avanzando automáticamente de página."""
-        api_url = 'https://api.artic.edu/api/v1/artworks'
-        
-        # 1. Calcular la página actual: número total de obras ya importadas ÷ 10 + 1
-        total_artworks = self.search_count([])
-        current_page = (total_artworks // 10) + 1
-        
+    def action_import_artworks(self, year_from=None, year_to=None, limit=10):
+        """Fetch artworks from the Art Institute of Chicago API and store them."""
+        api_url = 'https://api.artic.edu/api/v1/artworks/search'
         params = {
-            'fields': 'id,title,artist_display,image_id,date_start', 
-            'limit': 10,
-            'page': current_page,  # 2. Añadir el parámetro de página
+            'fields': 'id,title,artist_display,image_id,date_start',
+            'limit': limit,
         }
+        if year_from and year_to:
+            params['query[range][date_start][gte]'] = year_from
+            params['query[range][date_start][lte]'] = year_to
+        elif year_from:
+            params['query[range][date_start][gte]'] = year_from
+        elif year_to:
+            params['query[range][date_start][lte]'] = year_to
+
         headers = {
             'AIC-User-Agent': 'ArtGalleryOdooModule (tu-email@ejemplo.com)',
         }
@@ -60,8 +62,8 @@ class Artwork(models.Model):
 
             title = item.get('title') or 'Untitled'
             artist_display = item.get('artist_display') or ''
-            year = item.get('date_start')
             image_id = item.get('image_id')
+            year = item.get('date_start')
 
             image_base64 = False
             image_url = False
