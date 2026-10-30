@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_import_artworks_wizard_form" model="ir.ui.view">
+        <field name="name">art_gallery.import_wizard.form</field>
+        <field name="model">art_gallery.import_wizard</field>
+        <field name="arch" type="xml">
+            <form string="Import Artworks by Year">
+                <group>
+                    <field name="year_from"/>
+                    <field name="year_to"/>
+                    <field name="limit"/>
+                </group>
+                <footer>
+                    <button name="action_confirm_import"
+                            string="Import"
+                            type="object"
+                            class="btn-primary"/>
+                    <button string="Cancel"
+                            class="btn-secondary"
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_import_artworks_wizard" model="ir.actions.act_window">
+        <field name="name">Import Artworks</field>
+        <field name="res_model">art_gallery.import_wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

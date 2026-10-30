@@ -9,6 +9,7 @@
     'depends': ['base'],
     'data': [
         'security/ir.model.access.csv',
+        'wizard/import_artworks_wizard_views.xml',
         'views/artwork_views.xml',
         'views/art_gallery_menus.xml',
     ],
