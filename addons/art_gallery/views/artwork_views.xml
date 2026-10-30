@@ -5,10 +5,18 @@
         <field name="name">art_gallery.artwork.tree</field>
         <field name="model">art_gallery.artwork</field>
         <field name="arch" type="xml">
-            <list string="Artworks">
-                <field name="name"/>
-                <field name="artist_name"/>
-            </list>
+        <list string="Artworks">
+            <header>
+                <button name="action_import_artworks"
+                        type="object"
+                        string="Import from API"
+                        class="oe_highlight"
+                        display="always"/>
+            </header>
+            <field name="name"/>
+            <field name="artist_name"/>
+            <field name="year"/>
+        </list>
         </field>
     </record>
 
@@ -17,17 +25,20 @@
         <field name="name">art_gallery.artwork.form</field>
         <field name="model">art_gallery.artwork</field>
         <field name="arch" type="xml">
-            <form string="Artwork">
-                <sheet>
-                    <group>
-                        <field name="name"/>
-                        <field name="artist_name"/>
-                    </group>
-                    <group>
-                        <field name="description"/>
-                    </group>
-                </sheet>
-            </form>
+        <form string="Artwork">
+            <sheet>
+                <field name="image" widget="image" class="oe_avatar"/>
+                <group>
+                    <field name="name"/>
+                    <field name="artist_name"/>
+                    <field name="external_id"/>
+                </group>
+                <group>
+                    <field name="description"/>
+                    <field name="image_url" widget="url"/>
+                </group>
+            </sheet>
+        </form>
         </field>
     </record>
 
@@ -41,6 +52,15 @@
                 <field name="artist_name"/>
             </search>
         </field>
+    </record>
+
+    <record id="action_server_import_artworks" model="ir.actions.server">
+        <field name="name">Import Artworks from API</field>
+        <field name="model_id" ref="model_art_gallery_artwork"/>
+        <field name="binding_model_id" ref="model_art_gallery_artwork"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">model.action_import_artworks()</field>
     </record>
 
     <!-- Action -->
