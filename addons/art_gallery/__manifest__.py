@@ -6,13 +6,21 @@
     'author': 'DeepFelipe',
     'website': 'https://example.com',
     'category': 'Tools',
-    'depends': ['base'],
+    'depends': ['base', 'web'],
     'data': [
         'security/ir.model.access.csv',
         'wizard/import_artworks_wizard_views.xml',
         'views/artwork_views.xml',
+        'views/dashboard_views.xml',
         'views/art_gallery_menus.xml',
     ],
+    'assets': {
+        'web.assets_backend': [
+            'art_gallery/static/src/js/dashboard.js',
+            'art_gallery/static/src/xml/dashboard.xml',
+            'art_gallery/static/src/css/dashboard.css',
+        ],
+    },
     'external_dependencies': {
     'python': ['requests'],
     },

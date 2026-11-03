@@ -3,7 +3,7 @@ import logging
 
 import requests
 
-from odoo import fields, models
+from odoo import api, fields, models
 
 _logger = logging.getLogger(__name__)
 
@@ -88,4 +88,20 @@ class Artwork(models.Model):
 
         _logger.info('Imported %s new artworks.', created_count)
         return True
+
+    @api.model
+    def get_gallery_data(self, offset=0, limit=10):
+        domain = []
+        total = self.search_count(domain)
+        artworks = self.search(domain, offset=offset, limit=limit, order='id desc')        
+        return {
+            'total': total,
+            'artworks': [{
+                'id': artwork.id,
+                'name': artwork.name,
+                'artist_name': artwork.artist_name or '',
+                'year': artwork.year or '',
+                'image_src': f'/web/image/art_gallery.artwork/{artwork.id}/image' if artwork.image else False,
+            } for artwork in artworks],
+        }
 

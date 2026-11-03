@@ -1,0 +1,22 @@
+.o_art_gallery_dashboard {
+    height: 100%;
+    overflow-y: auto;
+}
+
+.o_art_gallery_dashboard .o_pager {
+    font-size: 0.85rem; /* Reduce el tamaño del texto (ej. 51-60 / 100) */
+    background-color: transparent; /* Quita el fondo gris por defecto */
+}
+
+.o_art_gallery_dashboard .o_pager .btn {
+    padding: 0.25rem 0.5rem; /* Reduce el tamaño de los botones (las flechas) */
+    font-size: 0.85rem;
+    background-color: transparent;
+    border: none;
+    color: #6c757d; /* Color gris para las flechas */
+}
+
+.o_art_gallery_dashboard .o_pager .btn:hover {
+    color: #343a40; /* Color más oscuro al pasar el ratón */
+    background-color: #e9ecef; /* Fondo sutil al pasar el ratón */
+}
