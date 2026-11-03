@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates xml:space="preserve">
+    <t t-name="art_gallery.Dashboard">
+        <div class="container-fluid mt-3 o_art_gallery_dashboard">
+            <h1 class="mb-4">Art Gallery</h1>
+
+            <t t-if="state.loading">
+                <div class="text-center py-5">
+                    <p class="text-muted">Loading artworks...</p>
+                </div>
+            </t>
+
+            <t t-elif="state.artworks.length === 0">
+                <div class="alert alert-info">
+                    No artworks found. Import some from the Artworks list first.
+                </div>
+            </t>
+
+            <div class="row" t-else="">
+                <t t-foreach="state.artworks" t-as="artwork" t-key="artwork.id">
+                    <div class="col-md-3 col-sm-6 mb-4">
+                        <div class="card h-100 shadow-sm">
+                            <img t-if="artwork.image_src"
+                                 class="card-img-top"
+                                 t-att-src="artwork.image_src"
+                                 t-att-alt="artwork.name"
+                                 style="height: 200px; object-fit: cover;"/>
+                            <div class="card-body">
+                                <h5 class="card-title" t-esc="artwork.name"/>
+                                <p class="card-text text-muted mb-1" t-esc="artwork.artist_name"/>
+                                <p class="card-text" t-if="artwork.year">
+                                    <small class="text-muted" t-esc="artwork.year"/>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+
+                
+            </div>
+        <div class="d-flex justify-content-center mt-4 mb-4">
+            <Pager
+                offset="state.offset"
+                limit="state.limit"
+                total="state.total"
+                onUpdate.bind="onPagerUpdate"
+            />
+        </div>
+        </div>
+    </t>
+</templates>
