@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_art_gallery_dashboard_ts" model="ir.actions.client">
+        <field name="name">Art Gallery Dashboard (TS)</field>
+        <field name="tag">art_gallery.dashboard_ts</field>
+    </record>
+
+    <menuitem id="menu_art_gallery_dashboard_ts"
+            name="Dashboard (TS)"
+            parent="menu_art_gallery_root"
+            action="action_art_gallery_dashboard_ts"
+            sequence="3"/>
+
+</odoo>
