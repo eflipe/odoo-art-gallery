@@ -12,6 +12,7 @@
         'wizard/import_artworks_wizard_views.xml',
         'views/artwork_views.xml',
         'views/dashboard_views.xml',
+        'views/dashboard_ts_views.xml', 
         'views/art_gallery_menus.xml',
     ],
     'assets': {
@@ -19,6 +20,9 @@
             'art_gallery/static/src/js/dashboard.js',
             'art_gallery/static/src/xml/dashboard.xml',
             'art_gallery/static/src/css/dashboard.css',
+            # 'art_gallery/static/src/dashboard_ts/dashboard_ts.ts',    # nuevo
+            'art_gallery/static/src/dashboard_ts/dashboard_ts.js',    # nuevo
+            'art_gallery/static/src/dashboard_ts/dashboard_ts.xml',   # nuevo
         ],
     },
     'external_dependencies': {

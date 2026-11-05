@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="art_gallery.DashboardTsTemplate">
+        <div class="container-fluid p-4">
+            <h1 class="mb-4">Art Gallery Dashboard (TypeScript)</h1>
+            <div class="row">
+                <t t-foreach="state.artworks" t-as="artwork" t-key="artwork.id">
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100">
+                            <img t-if="artwork.image"
+                                 t-att-src="'data:image/png;base64,' + artwork.image"
+                                 class="card-img-top"
+                                 style="height: 200px; object-fit: cover;"/>
+                            <div t-else="" class="card-img-top bg-secondary d-flex align-items-center justify-content-center" style="height: 200px;">
+                                <span class="text-white">Sin imagen</span>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title" t-esc="artwork.name"/>
+                                <p class="card-text text-muted" t-esc="artwork.artist_name"/>
+                                <p class="card-text" t-if="artwork.year">
+                                    <small>Año: <t t-esc="artwork.year"/></small>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </t>
+</templates>
