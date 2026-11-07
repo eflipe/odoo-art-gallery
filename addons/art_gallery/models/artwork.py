@@ -105,3 +105,23 @@ class Artwork(models.Model):
             } for artwork in artworks],
         }
 
+    @api.model
+    def get_dashboard_data(self, year_from=None, year_to=None):
+        """Return a list of artworks formatted for the dashboard."""
+        domain = []
+        if year_from:
+            domain.append(('year', '>=', year_from))
+        if year_to:
+            domain.append(('year', '<=', year_to))
+
+        artworks = self.search(domain, limit=50)
+        result = []
+        for artwork in artworks:
+            result.append({
+                'id': artwork.id,
+                'name': artwork.name,
+                'artist_name': artwork.artist_name or '',
+                'year': artwork.year,
+                'image': artwork.image.decode('utf-8') if artwork.image else None,
+            })
+        return result
