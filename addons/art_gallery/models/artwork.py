@@ -4,6 +4,7 @@ import logging
 import requests
 
 from odoo import api, fields, models
+from odoo.exceptions import ValidationError
 
 _logger = logging.getLogger(__name__)
 
@@ -108,13 +109,28 @@ class Artwork(models.Model):
     @api.model
     def get_dashboard_data(self, year_from=None, year_to=None):
         """Return a list of artworks formatted for the dashboard."""
+
+        # Intentar convertir a entero. Si el usuario escribió letras, lanzará error.
+        try:
+            if year_from is not None and str(year_from).strip() != '':
+                year_from = int(year_from)
+            else:
+                year_from = None
+                
+            if year_to is not None and str(year_to).strip() != '':
+                year_to = int(year_to)
+            else:
+                year_to = None
+        except (ValueError, TypeError):
+            raise ValidationError("Los años deben ser números enteros. No se permiten letras ni símbolos.")
+
         domain = []
         if year_from:
             domain.append(('year', '>=', year_from))
         if year_to:
             domain.append(('year', '<=', year_to))
 
-        artworks = self.search(domain, limit=50)
+        artworks = self.search(domain, limit=50, order='year asc')
         result = []
         for artwork in artworks:
             result.append({
