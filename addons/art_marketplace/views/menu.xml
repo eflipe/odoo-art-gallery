@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem
+        id="menu_art_marketplace_root"
+        name="Art Marketplace"
+        web_icon="fa-paint-brush"
+        sequence="10"
+    />
+
+    <menuitem
+        id="menu_art_marketplace_artwork_sales"
+        name="Artwork Sales"
+        parent="menu_art_marketplace_root"
+        action="action_art_marketplace_artwork_sale"
+        sequence="10"
+    />
+</odoo>
+
