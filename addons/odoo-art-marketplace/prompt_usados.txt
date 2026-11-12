@@ -1,0 +1,47 @@
+Fase 1
+
+Actúa como un desarrollador senior de Odoo 19. Estamos creando un nuevo módulo llamado `art_marketplace` en este repositorio. El módulo debe permitir vender obras de arte del modelo `art_gallery.artwork` y registrar la venta en contabilidad.
+
+**Contexto y Reglas:**
+- Sintaxis Odoo 19 estricta: usa `<list>` en lugar de `<tree>`, `invisible` en lugar de `attrs`, y `models.Constraint` en lugar de `_sql_constraints`.
+- Dependencias del módulo: `base`, `art_gallery` y `account`.
+- Nombres técnicos en inglés (ej. modelo `art_marketplace.artwork_sale`).
+
+**Tu tarea AHORA (Fase 1):**
+1. Primero, muéstrame un plan de los archivos y carpetas que vas a crear (estructura del módulo).
+2. Luego, genera el código para:
+   - El archivo `__manifest__.py`.
+   - El archivo `__init__.py` del módulo y de la carpeta `models`.
+   - El modelo `art_marketplace.artwork_sale.py` con los siguientes campos:
+     - `artwork_id`: Many2one a `art_gallery.artwork`, requerido.
+     - `price`: Monetary (con `currency_id` por defecto la de la compañía).
+     - `state`: Selection con `draft`, `published`, `sold`. Por defecto `draft`.
+     - `seller_id`: Many2one a `res.partner` (por defecto el usuario actual).
+     - `buyer_id`: Many2one a `res.partner`.
+     - `sale_date`: Date.
+     - `invoice_id`: Many2one a `account.move` (para guardar la factura generada).
+   - Añade una `models.Constraint` (sintaxis Odoo 19) para evitar que una misma obra tenga dos ventas activas (es decir, que no esté ya en un estado distinto de 'sold').
+
+Por favor, genera el código listo para producción y explica brevemente qué hace cada campo y la restricción.
+
+Fase 2
+Excelente trabajo en la Fase 1. Ahora vamos con la Fase 2: Vistas y Seguridad para el módulo `art_marketplace`.
+
+**Reglas estrictas de Odoo 19:**
+- Usa `<list>` en lugar de `<tree>`.
+- Usa `invisible="condicion"` en lugar de `attrs="{'invisible': ...}"`.
+- El campo `state` debe mostrarse con colores usando `decoration-info` (draft), `decoration-success` (published) y `decoration-muted` (sold) en la vista de lista.
+
+**Tu tarea:**
+1. Genera el archivo `security/ir.model.access.csv` otorgando permisos completos (lectura, escritura, creación, borrado) al grupo `base.group_user` para el modelo `art_marketplace.artwork_sale`.
+2. Genera el archivo `views/artwork_sale_views.xml` que contenga:
+   - **Vista de lista:** Muestra los campos `artwork_id`, `price`, `seller_id` y `state`. Aplica los colores al campo `state`.
+   - **Vista de formulario:** 
+     - Un `<header>` con dos botones: "Publicar" (llama a `action_publish`, visible solo si `state == 'draft'`) y "Vender" (llama a `action_sell`, visible solo si `state == 'published'`).
+     - En el cuerpo (`<sheet>`), organiza los campos en dos grupos: a la izquierda `artwork_id`, `price`, `seller_id`; a la derecha `state`, `buyer_id`, `sale_date` e `invoice_id`.
+   - **Vista de búsqueda:** Permite buscar por `artwork_id` y filtrar por `state`.
+   - **Acción de ventana (`ir.actions.act_window`):** Que use las vistas anteriores y tenga un nombre claro (ej. "Artwork Sales").
+3. Genera el archivo `views/menu.xml` con un menú raíz llamado "Art Marketplace" (con un icono adecuado, ej. `fa-paint-brush`) y un submenú "Artwork Sales" que apunte a la acción de ventana.
+
+No olvides actualizar el `__manifest__.py` para incluir los nuevos archivos en la lista `data`.
+Por favor, explica brevemente cómo funciona la visibilidad condicional de los botones en el header.
