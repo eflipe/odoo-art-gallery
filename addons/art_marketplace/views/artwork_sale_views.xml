@@ -42,19 +42,38 @@
                     <field name="state" widget="statusbar" statusbar_visible="draft,published,sold"/>
                 </header>
                 <sheet>
-                    <group>
-                        <group>
-                            <field name="artwork_id"/>
-                            <field name="price"/>
-                            <field name="seller_id"/>
-                        </group>
-                        <group>
-                            <field name="state" invisible="1"/>
-                            <field name="buyer_id"/>
-                            <field name="sale_date"/>
-                            <field name="invoice_id"/>
-                        </group>
-                    </group>
+                    <field name="unavailable_artwork_ids" invisible="1"/>
+                    
+                    <!-- Contenedor principal con flex -->
+                    <div class="d-flex w-100">
+                        
+                        <!-- Columna Izquierda: Datos de la venta (40%) -->
+                        <div class="w-40 pe-4" style="width: 40%;">
+                            <group>
+                                <field name="artwork_id" domain="[('id', 'not in', unavailable_artwork_ids)]" options="{'no_create': True}"/>
+                                <field name="description" placeholder="Notas sobre el estado de la obra, procedencia, etc."/>
+                            </group>
+                            <group>
+                                <field name="price" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                <field name="currency_id" options="{'no_create': True}"/>
+                            </group>
+                            <group string="Información de Venta">
+                                <field name="seller_id"/>
+                                <field name="buyer_id" invisible="state != 'sold'"/>
+                                <field name="sale_date" invisible="state != 'sold'"/>
+                                <field name="invoice_id" invisible="state != 'sold'"/>
+                                <field name="state" invisible="1"/>
+                            </group>
+                        </div>
+
+                        <!-- Columna Derecha: Imagen de la obra (60%) -->
+                        <div class="d-flex justify-content-center align-items-start pt-2" style="width: 60%;">
+                            <!-- Aumentamos el tamaño y añadimos una sombra suave -->
+                            <field name="artwork_image" widget="image" readonly="1" class="shadow-sm border rounded" 
+                                   options="{'size': [450, 450], 'preview_image': 'artwork_image'}"/>
+                        </div>
+                        
+                    </div>
                 </sheet>
             </form>
         </field>
