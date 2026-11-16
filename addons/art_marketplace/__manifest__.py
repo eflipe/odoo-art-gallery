@@ -13,6 +13,7 @@
     'data': [
         'security/ir.model.access.csv',
         'views/artwork_sale_views.xml',
+        'wizard/sell_artwork_wizard_views.xml',
         'views/menu.xml',
     ],
     'installable': True,

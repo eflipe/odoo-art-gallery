@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_art_marketplace_sell_wizard_form" model="ir.ui.view">
+        <field name="name">art_marketplace.sell_wizard.form</field>
+        <field name="model">art_marketplace.sell_wizard</field>
+        <field name="arch" type="xml">
+            <form string="Confirm Sale">
+                <sheet>
+                    <group>
+                        <field name="sale_id" invisible="1"/>
+                        <field name="buyer_id" string="Select Buyer"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button
+                        name="action_confirm_sale"
+                        string="Confirm Sale"
+                        type="object"
+                        class="btn-primary"
+                    />
+                    <button string="Cancel" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
+
