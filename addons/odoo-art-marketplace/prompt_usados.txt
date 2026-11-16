@@ -79,3 +79,22 @@ Actualmente, en `art_marketplace.artwork_sale`, el botón "Vender" llama directa
 5. **Registrar los nuevos archivos en el `__manifest__.py` y en los `__init__.py` correspondientes.**
 
 Explica brevemente cómo funciona el `TransientModel` y por qué es ideal para este caso.
+
+¡Excelente! Ahora vamos a la Fase 3.2: Integración con Contabilidad.
+
+**Contexto:**
+Tenemos un Wizard (`art_marketplace.sell_wizard`) que llama a `action_sell(buyer_id)` en el modelo `art_marketplace.artwork_sale`. Actualmente, `action_sell` solo cambia el estado a 'sold', pone la fecha y asigna el comprador.
+
+**Tarea:**
+1. **En `models/artwork_sale.py`:** Modifica el método `action_sell` para que, después de actualizar el estado, genere una factura de cliente en Odoo.
+   - Usa `self.env['account.move'].create({...})`.
+   - El diccionario debe tener:
+     - `move_type`: 'out_invoice'
+     - `partner_id`: el ID del comprador (`buyer_id`).
+     - `invoice_date`: la fecha actual (`fields.Date.context_today(self)`).
+     - `invoice_line_ids`: Una lista con un comando `(0, 0, {...})` para crear una línea.
+       - Dentro de la línea, incluye: `name` (ej. f"Venta de obra: {self.artwork_id.name}"), `quantity`: 1, y `price_unit`: `self.price`.
+   - Guarda la factura creada en el campo `invoice_id` del registro.
+   - Asegúrate de que el método maneje correctamente el contexto y no falle si no hay precio.
+
+2. **Explicación:** Dime qué hace exactamente el comando `(0, 0, {...})` en `invoice_line_ids` y por qué es necesario.

@@ -1,4 +1,6 @@
 from odoo import api, fields, models
+from odoo.exceptions import UserError
+
 import logging
 _logger = logging.getLogger(__name__)
 
@@ -127,6 +129,42 @@ class ArtworkSale(models.Model):
             vals['buyer_id'] = buyer_id.id
 
         sales.write(vals)
+
+        for sale in sales:
+            if not sale.buyer_id:
+                continue
+            # with_company ensures the invoice uses the sale's company journal/accounts.
+            invoice = self.env['account.move'].with_company(sale.company_id).create({
+                'move_type': 'out_invoice',
+                'partner_id': sale.buyer_id.id,
+                'invoice_date': fields.Date.context_today(sale),
+                'currency_id': sale.currency_id.id,
+                'invoice_line_ids': [(0, 0, {
+                    'name': f"Venta de obra: {sale.artwork_id.name}",
+                    'quantity': 1,
+                    'price_unit': sale.price or 0.0,
+                })],
+            })
+            sale.invoice_id = invoice
+
+    def action_reset_to_published(self):
+        for sale in self:
+            # Verificamos si hay una factura asociada y si está en estado borrador
+            if sale.invoice_id:
+                if sale.invoice_id.state != 'draft':
+                    raise UserError("No puedes revertir la venta porque la factura ya está registrada o pagada. Cancela la factura primero en Contabilidad.")
+                else:
+                    # Si la factura está en borrador, la eliminamos para no dejar registros huérfanos
+                    sale.invoice_id.unlink()
+            
+            # Volvemos el estado a published y limpiamos los campos de venta
+            sale.write({
+                'state': 'published',
+                'buyer_id': False,
+                'sale_date': False,
+                'invoice_id': False,
+            })
+
 
     def action_open_sell_wizard(self):
         self.ensure_one()

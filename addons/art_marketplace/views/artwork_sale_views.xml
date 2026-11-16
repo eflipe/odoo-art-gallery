@@ -39,6 +39,13 @@
                         class="btn-primary"
                         invisible="state != 'published'"
                     />
+                    <button
+                        name="action_reset_to_published"
+                        string="Cancel Sale"
+                        type="object"
+                        class="btn-secondary"
+                        invisible="state != 'sold'"
+                    />
                     <field name="state" widget="statusbar" statusbar_visible="draft,published,sold"/>
                 </header>
                 <sheet>
@@ -61,7 +68,7 @@
                                 <field name="seller_id" context="{'show_only_name': True}" domain="[('is_company', '=', False)]"/>
                                 <field name="buyer_id" context="{'show_only_name': True}" domain="[('is_company', '=', False)]" invisible="state != 'sold'"/>
                                 <field name="sale_date" invisible="state != 'sold'"/>
-                                <field name="invoice_id" invisible="state != 'sold'"/>
+                                <field name="invoice_id" invisible="state != 'sold'" readonly="1"/>
                                 <field name="state" invisible="1"/>
                             </group>
                         </div>
