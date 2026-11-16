@@ -45,3 +45,37 @@ Excelente trabajo en la Fase 1. Ahora vamos con la Fase 2: Vistas y Seguridad pa
 
 No olvides actualizar el `__manifest__.py` para incluir los nuevos archivos en la lista `data`.
 Por favor, explica brevemente cómo funciona la visibilidad condicional de los botones en el header.
+
+¡Excelente! Ahora vamos a crear un Wizard (Asistente) para que el usuario pueda elegir al comprador antes de confirmar la venta. 
+
+**Contexto:**
+Actualmente, en `art_marketplace.artwork_sale`, el botón "Vender" llama directamente al método `action_sell` y cambia el estado a `sold` sin preguntar nada.
+
+**Tarea (Fase 3.1):**
+1. **Crear el modelo del Wizard (`wizard/sell_artwork_wizard.py`):**
+   - Nómbralo `art_marketplace.sell_wizard`.
+   - Debe ser un `models.TransientModel`.
+   - Campos:
+     - `sale_id`: Many2one a `art_marketplace.artwork_sale` (requerido, readonly).
+     - `buyer_id`: Many2one a `res.partner` (requerido). Este es el comprador que el usuario elegirá.
+   - Método `action_confirm_sale(self)`:
+     - Debe llamar al método `action_sell` del registro `sale_id`, pasándole el `buyer_id` como argumento.
+     - Al finalizar, debe cerrar el wizard devolviendo `{'type': 'ir.actions.act_window_close'}`.
+
+2. **Crear la vista del Wizard (`wizard/sell_artwork_wizard_views.xml`):**
+   - Una vista de formulario simple (`<form string="Confirm Sale">`).
+   - Muestra el campo `sale_id` (invisible) y el campo `buyer_id` (con un label claro, ej. "Select Buyer").
+   - En el `<footer>`, añade dos botones: "Confirm Sale" (llamando a `action_confirm_sale`, con `class="btn-primary"`) y "Cancel" (`special="cancel"`).
+
+3. **Modificar el modelo `art_marketplace.artwork_sale` (`models/artwork_sale.py`):**
+   - Modifica el método `action_sell` para que reciba un parámetro opcional `buyer_id=None`.
+   - Si se recibe `buyer_id`, asígnalo al campo `buyer_id` del registro.
+   - Mantén la lógica actual de cambiar el estado a `sold` y asignar la fecha.
+   - **IMPORTANTE:** Crea un nuevo método llamado `action_open_sell_wizard` que devuelva un diccionario de acción (`ir.actions.act_window`) para abrir el wizard. Pásale el ID del registro actual (`self.id`) en el contexto o como valor por defecto para `sale_id`.
+
+4. **Modificar la vista `views/artwork_sale_views.xml`:**
+   - Cambia el botón "Vender" en el `<header>` para que llame a `action_open_sell_wizard` en lugar de `action_sell`. Asegúrate de que siga teniendo `invisible="state != 'published'"`.
+
+5. **Registrar los nuevos archivos en el `__manifest__.py` y en los `__init__.py` correspondientes.**
+
+Explica brevemente cómo funciona el `TransientModel` y por qué es ideal para este caso.

@@ -1,3 +1,4 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_art_marketplace_artwork_sale_user,art_marketplace.artwork_sale user,model_art_marketplace_artwork_sale,base.group_user,1,1,1,1
+access_art_marketplace_sell_wizard_user,art_marketplace.sell_wizard user,model_art_marketplace_sell_wizard,base.group_user,1,1,1,1
 

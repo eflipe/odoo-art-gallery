@@ -33,7 +33,7 @@
                         invisible="state != 'draft'"
                     />
                     <button
-                        name="action_sell"
+                        name="action_open_sell_wizard"
                         string="Vender"
                         type="object"
                         class="btn-primary"
@@ -58,8 +58,8 @@
                                 <field name="currency_id" options="{'no_create': True}"/>
                             </group>
                             <group string="Información de Venta">
-                                <field name="seller_id"/>
-                                <field name="buyer_id" invisible="state != 'sold'"/>
+                                <field name="seller_id" context="{'show_only_name': True}" domain="[('is_company', '=', False)]"/>
+                                <field name="buyer_id" context="{'show_only_name': True}" domain="[('is_company', '=', False)]" invisible="state != 'sold'"/>
                                 <field name="sale_date" invisible="state != 'sold'"/>
                                 <field name="invoice_id" invisible="state != 'sold'"/>
                                 <field name="state" invisible="1"/>

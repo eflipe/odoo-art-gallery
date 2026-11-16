@@ -113,8 +113,30 @@ class ArtworkSale(models.Model):
     def action_publish(self):
         self.filtered(lambda s: s.state == 'draft').write({'state': 'published'})
 
-    def action_sell(self):
-        self.filtered(lambda s: s.state == 'published').write({
+    def action_sell(self, buyer_id=None):
+        sales = self.filtered(lambda s: s.state == 'published')
+        if not sales:
+            return
+
+        vals = {
             'state': 'sold',
             'sale_date': fields.Date.context_today(self),
-        })
+        }
+        if buyer_id:
+            buyer_id.ensure_one()
+            vals['buyer_id'] = buyer_id.id
+
+        sales.write(vals)
+
+    def action_open_sell_wizard(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Confirm Sale',
+            'res_model': 'art_marketplace.sell_wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_sale_id': self.id,
+            },
+        }
