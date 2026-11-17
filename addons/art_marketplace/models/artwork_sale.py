@@ -8,6 +8,16 @@ class ArtworkSale(models.Model):
     _name = 'art_marketplace.artwork_sale'
     _description = 'Artwork Sale'
 
+    purchase_request_ids = fields.One2many(
+        comodel_name='art_marketplace.purchase_request',
+        inverse_name='artwork_sale_id',
+        string='Purchase Requests',
+    )
+    purchase_request_count = fields.Integer(
+        string='Purchase Request Count',
+        compute='_compute_purchase_request_count',
+    )
+
     company_id = fields.Many2one(
         comodel_name='res.company',
         required=True,
@@ -111,6 +121,22 @@ class ArtworkSale(models.Model):
 
         for sale in self:   
             sale.unavailable_artwork_ids = [(6, 0, blocked_artwork_ids)]
+
+    @api.depends('purchase_request_ids')
+    def _compute_purchase_request_count(self):
+        for sale in self:
+            sale.purchase_request_count = len(sale.purchase_request_ids)
+
+    def action_view_purchase_requests(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Purchase Requests',
+            'res_model': 'art_marketplace.purchase_request',
+            'view_mode': 'list,form',
+            'domain': [('artwork_sale_id', '=', self.id)],
+            'context': {'default_artwork_sale_id': self.id},
+        }
 
     def action_publish(self):
         self.filtered(lambda s: s.state == 'draft').write({'state': 'published'})

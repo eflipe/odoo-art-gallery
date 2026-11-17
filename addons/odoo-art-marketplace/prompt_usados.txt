@@ -98,3 +98,29 @@ Tenemos un Wizard (`art_marketplace.sell_wizard`) que llama a `action_sell(buyer
    - Asegúrate de que el método maneje correctamente el contexto y no falle si no hay precio.
 
 2. **Explicación:** Dime qué hace exactamente el comando `(0, 0, {...})` en `invoice_line_ids` y por qué es necesario.
+
+¡Excelente trabajo hasta ahora! Vamos a empezar la Fase 4: un sistema interno de "Tickets de Intención de Compra" (Purchase Requests).
+
+**Tarea (Fase 4.1): Crear el modelo `art_marketplace.purchase_request`**
+1. Crea el archivo `models/purchase_request.py`.
+2. Define el modelo `art_marketplace.purchase_request` con los siguientes campos:
+   - `name`: Char (string="Reference", readonly=True, default="Nuevo").
+   - `artwork_sale_id`: Many2one a `art_marketplace.artwork_sale` (string="Artwork", required=True, domain="[('state', '=', 'published')]").
+   - `partner_id`: Many2one a `res.partner` (string="Customer").
+   - `customer_name`: Char (string="Customer Name", required=True).
+   - `customer_email`: Char (string="Email", required=True).
+   - `customer_phone`: Char (string="Phone").
+   - `message`: Text (string="Message / Inquiry").
+   - `state`: Selection con los valores `new` (New), `contacted` (Contacted), `won` (Won), `canceled` (Canceled). Por defecto `new`. (Usamos 'won' en lugar de converted).
+   - `request_date`: Date (string="Request Date", default=fields.Date.context_today).
+3. Añade un método `action_win_ticket(self)`:
+   - Verifica que el estado sea `new` o `contacted`.
+   - Si no hay un `partner_id`, crea un `res.partner` con el `customer_name` y `customer_email`.
+   - Actualiza el registro de `artwork_sale_id` asociado: asígnale el `partner_id` como comprador y cambia el estado del ticket a `won`.
+
+**Tarea (Fase 4.2): Smart Button en `artwork_sale`**
+1. En el modelo `art_marketplace.artwork_sale` (`models/artwork_sale.py`), añade un campo computado:
+   - `purchase_request_ids`: One2many a `art_marketplace.purchase_request` (inverse_name='artwork_sale_id').
+   - `purchase_request_count`: Integer (compute="_compute_purchase_request_count").
+2. Añade un método `action_view_purchase_requests(self)` que devuelva una acción de ventana (`ir.actions.act_window`) para ver los tickets asociados a esa venta.
+3. Explica cómo funciona el patrón de los "Smart Buttons" en Odoo y para qué sirve.

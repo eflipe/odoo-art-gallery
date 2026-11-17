@@ -14,5 +14,14 @@
         action="action_art_marketplace_artwork_sale"
         sequence="10"
     />
+
+    <menuitem
+        id="menu_art_marketplace_purchase_requests"
+        name="Purchase Requests"
+        parent="menu_art_marketplace_root"
+        action="action_art_marketplace_purchase_request"
+        sequence="20"
+    />
+    
 </odoo>
 
