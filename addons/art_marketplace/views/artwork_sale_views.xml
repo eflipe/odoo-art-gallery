@@ -49,8 +49,35 @@
                     <field name="state" widget="statusbar" statusbar_visible="draft,published,sold"/>
                 </header>
                 <sheet>
+
                     <field name="unavailable_artwork_ids" invisible="1"/>
-                    
+
+                    <div class="oe_button_box" name="button_box">
+                        <button
+                            name="action_view_purchase_requests"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-ticket"
+                            invisible="purchase_request_count == 0"
+                        >
+                            <field name="purchase_request_count" widget="statinfo" string="Tickets"/>
+                        </button>
+                    </div>
+
+                    <!-- NUEVA ALERTA VERDE -->
+                    <div class="alert alert-success d-flex align-items-center mt-3 mb-0" 
+                         role="alert" 
+                         style="border-radius: 5px;"
+                         invisible="purchase_request_count == 0 or state == 'sold'">
+                        <i class="fa fa-info-circle fa-2x me-3"/>
+                        <div>
+                            <strong>¡Atención!</strong> Existen 
+                            <field name="purchase_request_count" readonly="1" class="fw-bold d-inline"/> 
+                            ticket(s) de compra para esta obra. 
+                            Revisa los <strong>Purchase Requests</strong> antes de confirmar la venta.
+                        </div>
+                    </div>
+
                     <!-- Contenedor principal con flex -->
                     <div class="d-flex w-100">
                         

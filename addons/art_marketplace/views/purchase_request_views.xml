@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_art_marketplace_purchase_request_list" model="ir.ui.view">
+        <field name="name">art_marketplace.purchase_request.list</field>
+        <field name="model">art_marketplace.purchase_request</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="artwork_sale_id"/>
+                <field name="customer_name"/>
+                <field name="request_date"/>
+                <field
+                    name="state"
+                    widget="badge"
+                    decoration-info="state == 'new'"
+                    decoration-warning="state == 'contacted'"
+                    decoration-success="state == 'won'"
+                    decoration-muted="state == 'canceled'"
+                />
+            </list>
+        </field>
+    </record>
+
+    <record id="view_art_marketplace_purchase_request_form" model="ir.ui.view">
+        <field name="name">art_marketplace.purchase_request.form</field>
+        <field name="model">art_marketplace.purchase_request</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button
+                        name="action_mark_contacted"
+                        string="Mark as Contacted"
+                        type="object"
+                        class="btn-secondary"
+                        invisible="state != 'new'"
+                    />
+                    <button
+                        name="action_win_ticket"
+                        string="Win Ticket"
+                        type="object"
+                        class="btn-primary"
+                        invisible="state != 'contacted'"
+                    />
+                    <button name="action_cancel_ticket" 
+                            string="Cancel Ticket" 
+                            type="object" 
+                            class="btn-secondary" 
+                            invisible="state in ['won', 'canceled']"
+                    />
+                    <field name="state" widget="statusbar" statusbar_visible="new,contacted,won,canceled"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="artwork_sale_id"/>
+                            <field name="customer_name"/>
+                            <field name="customer_email"/>
+                            <field name="customer_phone"/>
+                        </group>
+                        <group>
+                            <field name="partner_id"/>
+                            <field name="request_date"/>
+                            <field name="state" invisible="1"/>
+                            <field name="message" placeholder="Customer inquiry..."/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_art_marketplace_purchase_request_search" model="ir.ui.view">
+        <field name="name">art_marketplace.purchase_request.search</field>
+        <field name="model">art_marketplace.purchase_request</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="artwork_sale_id"/>
+                <field name="customer_name"/>
+                <filter string="New" name="state_new" domain="[('state', '=', 'new')]"/>
+                <filter string="Contacted" name="state_contacted" domain="[('state', '=', 'contacted')]"/>
+                <filter string="Won" name="state_won" domain="[('state', '=', 'won')]"/>
+                <filter string="Canceled" name="state_canceled" domain="[('state', '=', 'canceled')]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_art_marketplace_purchase_request" model="ir.actions.act_window">
+        <field name="name">Purchase Requests</field>
+        <field name="res_model">art_marketplace.purchase_request</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_art_marketplace_purchase_request_search"/>
+    </record>
+
+</odoo>
+
