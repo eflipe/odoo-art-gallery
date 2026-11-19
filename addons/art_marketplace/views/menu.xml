@@ -3,7 +3,7 @@
     <menuitem
         id="menu_art_marketplace_root"
         name="Art Marketplace"
-        web_icon="fa-paint-brush"
+        web_icon="art_marketplace,static/description/icon.png"
         sequence="10"
     />
 

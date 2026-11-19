@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="art_app_launcher.AppLauncher">
+        <div class="o_action_manager o_art_app_launcher container-fluid p-4" style="height: 100%; overflow-y: auto;">
+            <h1 class="mb-4">Apps</h1>
+
+            <t t-if="state.loading">
+                <div class="text-center py-5">
+                    <p class="text-muted">Loading apps...</p>
+                </div>
+            </t>
+
+            <t t-else="">
+                <div class="row g-3">
+                    <t t-foreach="state.apps" t-as="app" t-key="app.id">
+                        <div class="col-lg-2 col-md-3 col-sm-4">
+                            <div class="card h-100 shadow-sm" role="button" t-on-click="openApp.bind(this, app)">
+                                <div class="d-flex align-items-center justify-content-center" style="height: 120px; background-color: #f8f9fa;">
+                                    <img
+                                        t-if="getIconUrl(app.icon)"
+                                        t-att-src="getIconUrl(app.icon)"
+                                        t-att-alt="app.name"
+                                        style="max-height: 80px; max-width: 80px; object-fit: contain;"
+                                    />
+                                    <div t-else="" class="text-muted">
+                                        <i class="fa fa-cube fa-3x"/>
+                                    </div>
+                                </div>
+                                <div class="card-body text-center">
+                                    <div class="fw-semibold" t-esc="app.name"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="art_app_launcher.HomeSystray">
+        <button
+            type="button"
+            class="btn btn-link o-no-caret"
+            title="Apps"
+            aria-label="Apps"
+            t-on-click="openLauncher"
+        >
+            <i class="fa fa-home"/>
+        </button>
+    </t>
+</templates>
+
