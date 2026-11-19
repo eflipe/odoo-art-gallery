@@ -2,6 +2,7 @@
 <odoo>
     <menuitem id="menu_art_gallery_root"
               name="Art Gallery"
+              web_icon="art_gallery,static/description/icon.png"
               sequence="10"/>
 
     <menuitem id="menu_artwork"
