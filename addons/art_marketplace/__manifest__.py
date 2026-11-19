@@ -9,6 +9,8 @@
         'base',
         'art_gallery',
         'account',
+        'website',
+        'phone_validation',
     ],
     'data': [
         'security/ir.model.access.csv',
@@ -16,6 +18,7 @@
         'views/purchase_request_views.xml',
         'wizard/sell_artwork_wizard_views.xml',
         'views/menu.xml',
+        'views/website_templates.xml',
     ],
     'installable': True,
     'application': True,

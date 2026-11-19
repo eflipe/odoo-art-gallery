@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="gallery_template" name="Art Gallery">
+            <t t-call="website.layout">
+                <div class="container">
+                    <h1 class="text-center my-5">Art Gallery</h1>
+
+                    <div class="row">
+                        <t t-foreach="artworks" t-as="artwork">
+                            <div class="col-md-4 mb-4">
+                                <div class="card h-100 shadow-sm">
+                                    <img
+                                        t-att-src="'/web/image/art_marketplace.artwork_sale/%s/artwork_image' % artwork.id"
+                                        class="card-img-top"
+                                        style="height: 300px; object-fit: cover;"
+                                        t-att-alt="artwork.artwork_id.name"
+                                    />
+                                    <div class="card-body d-flex flex-column">
+                                        <h5 class="card-title" t-esc="artwork.artwork_id.name"/>
+                                        <p class="card-text mb-4">
+                                            <strong>
+                                                <span
+                                                    t-field="artwork.price"
+                                                    t-options="{'widget': 'monetary', 'display_currency': artwork.currency_id}"
+                                                />
+                                            </strong>
+                                        </p>
+                                        <a
+                                            t-att-href="'/gallery/request/%s' % artwork.id"
+                                            class="btn btn-primary btn-lg w-100 mt-auto"
+                                        >
+                                            Me interesa
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+            </t>
+        </template>
+
+        <template id="request_form_template" name="Purchase Request Form">
+            <t t-call="website.layout">
+                <div class="container my-5">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-8">
+                            <h1 class="mb-4">Purchase Request</h1>
+
+                            <div class="card mb-4 shadow-sm">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <img
+                                            t-att-src="'/web/image/art_marketplace.artwork_sale/%s/artwork_image' % sale.id"
+                                            style="width: 90px; height: 90px; object-fit: cover;"
+                                            class="rounded border"
+                                            t-att-alt="sale.artwork_id.name"
+                                        />
+                                        <div>
+                                            <div class="text-muted">Artwork</div>
+                                            <div class="h5 mb-0" t-esc="sale.artwork_id.name"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <form method="POST" t-att-action="'/gallery/request/%s' % sale.id">
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                                <t t-if="error">
+                                    <div class="alert alert-danger" role="alert">
+                                        <t t-esc="error"/>
+                                    </div>
+                                </t>
+
+                                <div class="mb-3">
+                                    <label class="form-label" for="customer_name">Nombre</label>
+                                    <input
+                                        id="customer_name"
+                                        name="customer_name"
+                                        type="text"
+                                        t-att-value="prefill.get('customer_name') or ''"
+                                        class="form-control form-control-lg"
+                                        required="required"
+                                    />
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label" for="customer_email">Email</label>
+                                    <input
+                                        id="customer_email"
+                                        name="customer_email"
+                                        type="email"
+                                        t-att-value="prefill.get('customer_email') or ''"
+                                        class="form-control form-control-lg"
+                                        required="required"
+                                    />
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label" for="customer_phone">Teléfono</label>
+                                    <input
+                                        type="tel"
+                                        id="customer_phone"
+                                        name="customer_phone"
+                                        t-att-value="prefill.get('customer_phone') or ''"
+                                        placeholder="+54 11 1234-5678"
+                                        pattern="[0-9+\s()-]{7,20}"
+                                        title="Ingresa un número de teléfono válido (solo números, espacios, guiones y paréntesis)"
+                                        class="form-control form-control-lg"
+                                    />
+                                </div>
+
+                                <div class="mb-4">
+                                    <label class="form-label" for="message">Mensaje</label>
+                                    <textarea
+                                        id="message"
+                                        name="message"
+                                        class="form-control form-control-lg"
+                                        rows="5"
+                                    ><t t-esc="prefill.get('message') or ''"/></textarea>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary btn-lg w-100">
+                                    Enviar Solicitud
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
+
+        <template id="thank_you_template" name="Thank You">
+            <t t-call="website.layout">
+                <div class="container my-5">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-8 text-center">
+                            <h1 class="my-4">¡Gracias por tu interés!</h1>
+                            <p class="lead mb-4">Recibimos tu solicitud y te contactaremos pronto.</p>
+                            <a href="/gallery" class="btn btn-outline-primary btn-lg">
+                                Volver al catálogo
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
+    </data>
+</odoo>
+

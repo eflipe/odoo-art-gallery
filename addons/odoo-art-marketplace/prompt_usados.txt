@@ -124,3 +124,20 @@ Tenemos un Wizard (`art_marketplace.sell_wizard`) que llama a `action_sell(buyer
    - `purchase_request_count`: Integer (compute="_compute_purchase_request_count").
 2. Añade un método `action_view_purchase_requests(self)` que devuelva una acción de ventana (`ir.actions.act_window`) para ver los tickets asociados a esa venta.
 3. Explica cómo funciona el patrón de los "Smart Buttons" en Odoo y para qué sirve.
+
+¡Excelente! Vamos a construir la galería pública en **Odoo 19**.
+
+**Tarea (Fase 5.1): El Controlador Web**
+1. Crea la carpeta `controllers/` y el archivo `controllers/main.py`.
+2. Crea una clase `ArtGalleryWebsite(http.Controller)`.
+3. Define una ruta `@http.route('/gallery', auth='public', website=True)`:
+   - Debe buscar todas las ventas de obras (`art_marketplace.artwork_sale`) que estén en estado `published`.
+   - Pasa esos registros al renderizado de la plantilla: `return request.render('art_marketplace.gallery_template', {'artworks': artworks})`.
+4. Define una ruta `@http.route('/gallery/request/<int:sale_id>', auth='public', website=True, methods=['GET', 'POST'])`:
+   - En el método GET: Busca el registro `artwork_sale` y renderiza la plantilla del formulario: `return request.render('art_marketplace.request_form_template', {'sale': sale})`.
+   - En el método POST: Captura los datos enviados (`request.params.get('customer_name')`, `customer_email`, `customer_phone`, `message`).
+   - Crea un registro en `art_marketplace.purchase_request` con esos datos y el `artwork_sale_id`.
+   - Redirige a una página de agradecimiento: `return request.redirect('/gallery/thank-you')`.
+5. Define una ruta `@http.route('/gallery/thank-you', auth='public', website=True)` que renderice una plantilla simple de agradecimiento.
+
+**Concepto UX aplicado:** Estamos separando el "Catálogo" (ver las obras) de la "Acción" (el formulario). Esto reduce la carga cognitiva: el usuario primero explora y luego decide.
