@@ -13,7 +13,13 @@ class Artwork(models.Model):
     _description = 'Artwork'
 
     name = fields.Char(string='Title', required=True)
+    artist_id = fields.Many2one(
+        'art_gallery.artist',
+        string='Artist Entity',
+        ondelete='restrict',
+    )
     artist_name = fields.Char(string='Artist')
+    artist_display = fields.Char(string='Artist Details')
     description = fields.Text(string='Description')
     external_id = fields.Char(string='External ID', index=True)
     image = fields.Binary(string='Image', attachment=True)
@@ -30,7 +36,7 @@ class Artwork(models.Model):
         """Fetch artworks from the Art Institute of Chicago API and store them."""
         api_url = 'https://api.artic.edu/api/v1/artworks/search'
         params = {
-            'fields': 'id,title,artist_display,image_id,date_start',
+            'fields': 'id,title,artist_title,artist_display,image_id,date_start',
             'limit': limit,
         }
         if year_from and year_to:
@@ -62,9 +68,23 @@ class Artwork(models.Model):
                 continue
 
             title = item.get('title') or 'Untitled'
+            artist_title = item.get('artist_title') or 'Unknown'
             artist_display = item.get('artist_display') or ''
             image_id = item.get('image_id')
             year = item.get('date_start')
+
+            artist = self.env['art_gallery.artist'].with_context(
+                active_test=False,
+            ).search(
+                [('name', '=', artist_title)],
+                limit=1,
+            )
+            if not artist:
+                artist = self.env['art_gallery.artist'].create({
+                    'name': artist_title,
+                    'biography': artist_display,
+                })
+            artist._get_or_create_partner()
 
             image_base64 = False
             image_url = False
@@ -79,7 +99,9 @@ class Artwork(models.Model):
 
             self.create({
                 'name': title,
-                'artist_name': artist_display,
+                'artist_id': artist.id,
+                'artist_name': artist_title,
+                'artist_display': artist_display,
                 'external_id': external_id,
                 'image': image_base64,
                 'image_url': image_url,

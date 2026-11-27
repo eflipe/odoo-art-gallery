@@ -45,22 +45,35 @@ class PurchaseRequest(models.Model):
         required=True,
     )
 
+    def _find_or_create_partner(self):
+        self.ensure_one()
+        partner = self.partner_id
+        if not partner:
+            partner = self.env['res.partner'].search([
+                ('email', '=', self.customer_email),
+            ], limit=1)
+            if not partner and self.customer_phone:
+                partner = self.env['res.partner'].search([
+                    ('name', '=', self.customer_name),
+                    ('phone', '=', self.customer_phone),
+                ], limit=1)
+            if not partner:
+                partner_vals = {
+                    'name': self.customer_name,
+                    'email': self.customer_email,
+                }
+                if self.customer_phone:
+                    partner_vals['phone'] = self.customer_phone
+                partner = self.env['res.partner'].create(partner_vals)
+            self.partner_id = partner
+        return partner
+
     def action_mark_contacted(self):
         for ticket in self:
             if ticket.state != 'new':
                 raise UserError('Only New tickets can be marked as Contacted.')
 
-            partner = ticket.partner_id
-            if not partner:
-                partner_vals = {
-                    'name': ticket.customer_name,
-                    'email': ticket.customer_email,
-                }
-                if ticket.customer_phone:
-                    partner_vals['phone'] = ticket.customer_phone
-                partner = self.env['res.partner'].create(partner_vals)
-                ticket.partner_id = partner
-
+            ticket._find_or_create_partner()
             ticket.state = 'contacted'
 
     def action_win_ticket(self):
@@ -73,14 +86,15 @@ class PurchaseRequest(models.Model):
         # Verificamos que la obra no se haya vendido ya por otro lado
         if sale.state == 'sold':
             raise UserError("Esta obra ya ha sido vendida.")
-            
+
+        partner = self._find_or_create_partner()
+
         # Asignamos el comprador a la venta
-        if self.partner_id:
-            sale.buyer_id = self.partner_id.id
-            
+        sale.buyer_id = partner.id
+
         # ¡El cambio clave! Cerramos la venta (pasa a 'sold' y genera factura)
         # Pasamos el partner_id para que el método sepa a quién facturar
-        sale.action_sell(buyer_id=self.partner_id)
+        sale.action_sell(buyer_id=partner)
         
         # Marcamos el ticket como ganado
         self.state = 'won'

@@ -10,4 +10,10 @@
               parent="menu_art_gallery_root"
               action="action_artwork"
               sequence="1"/>
+
+    <menuitem id="menu_artist"
+              name="Artists"
+              parent="menu_art_gallery_root"
+              action="action_artist"
+              sequence="2"/>
 </odoo>

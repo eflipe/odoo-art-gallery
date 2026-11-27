@@ -84,18 +84,41 @@
                         <!-- Columna Izquierda: Datos de la venta (40%) -->
                         <div class="w-40 pe-4" style="width: 40%;">
                             <group>
-                                <field name="artwork_id" domain="[('id', 'not in', unavailable_artwork_ids)]" options="{'no_create': True}"/>
+                                <field name="artist_id" options="{'no_create': True}"/>
+                                <field
+                                    name="artwork_id"
+                                    string="Select Artwork"
+                                    domain="[
+                                        ('artist_id', '=', artist_id),
+                                        ('id', 'not in', unavailable_artwork_ids)
+                                    ]"
+                                    options="{'no_create': True}"
+                                />
                                 <field name="description" placeholder="Notas sobre el estado de la obra, procedencia, etc."/>
                             </group>
                             <group>
                                 <field name="price" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                                 <field name="currency_id" options="{'no_create': True}"/>
                             </group>
+                            <group string="Distribución de la Venta">
+                                <field name="artist_commission_percentage"/>
+                                <field
+                                    name="artist_commission_amount"
+                                    widget="monetary"
+                                    options="{'currency_field': 'currency_id'}"
+                                />
+                                <field
+                                    name="gallery_net_income"
+                                    widget="monetary"
+                                    options="{'currency_field': 'currency_id'}"
+                                />
+                            </group>
                             <group string="Información de Venta">
                                 <field name="seller_id" context="{'show_only_name': True}" domain="[('is_company', '=', False)]"/>
                                 <field name="buyer_id" context="{'show_only_name': True}" domain="[('is_company', '=', False)]" invisible="state != 'sold'"/>
                                 <field name="sale_date" invisible="state != 'sold'"/>
                                 <field name="invoice_id" invisible="state != 'sold'" readonly="1"/>
+                                <field name="artist_invoice_id" invisible="state != 'sold'" readonly="1"/>
                                 <field name="state" invisible="1"/>
                             </group>
                         </div>
