@@ -8,7 +8,13 @@
                 <sheet>
                     <group>
                         <field name="sale_id" invisible="1"/>
-                        <field name="buyer_id" string="Select Buyer"/>
+                        <field name="valid_buyer_ids" invisible="1"/>
+                        <field
+                            name="buyer_id"
+                            string="Select Buyer"
+                            domain="[('id', 'in', valid_buyer_ids)]"
+                            context="{'show_email': True}"
+                        />
                     </group>
                 </sheet>
                 <footer>

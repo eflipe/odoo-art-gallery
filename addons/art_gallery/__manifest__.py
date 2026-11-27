@@ -10,6 +10,7 @@
     'data': [
         'security/ir.model.access.csv',
         'wizard/import_artworks_wizard_views.xml',
+        'views/artist_views.xml',
         'views/artwork_views.xml',
         'views/dashboard_views.xml',
         'views/dashboard_ts_views.xml', 
